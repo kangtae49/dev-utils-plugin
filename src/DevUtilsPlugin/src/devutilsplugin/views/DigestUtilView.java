@@ -92,6 +92,7 @@ public class DigestUtilView extends ViewPart {
 		layoutData.bottom = new FormAttachment(100, -pad_frame);
 		txtDEC.setFont(new Font(parent.getDisplay(), "Fixedsys", 12, SWT.NONE));
 		txtDEC.setLayoutData(layoutData);
+		txtDEC.setText("Input string or Drag&Drop File(s)!");
 
 		layoutData = new FormData();
 		layoutData.top = new FormAttachment(cboDigest, pad_frame);
