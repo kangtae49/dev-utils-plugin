@@ -3,7 +3,12 @@
 <plugin>
    <extension
          point="org.eclipse.ui.views">
+      <category
+            id="DevUtilsPlugin.categorys.DevUtils"
+            name="DevUtils">
+      </category>
       <view
+            category="DevUtilsPlugin.categorys.DevUtils"
             class="devutilsplugin.views.DigestUtilView"
             id="DevUtilsPlugin.views.DigestUtilView"
             name="DigestUtilView"
