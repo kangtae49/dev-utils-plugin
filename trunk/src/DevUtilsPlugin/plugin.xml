@@ -3,6 +3,12 @@
 <plugin>
    <extension
          point="org.eclipse.ui.views">
+      <view
+            class="devutilsplugin.views.DigestUtilView"
+            id="DevUtilsPlugin.views.DigestUtilView"
+            name="DigestUtilView"
+            restorable="true">
+      </view>
    </extension>
 
 </plugin>
