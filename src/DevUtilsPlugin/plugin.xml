@@ -14,6 +14,13 @@
             name="DigestUtilView"
             restorable="true">
       </view>
+      <view
+            category="DevUtilsPlugin.categorys.DevUtils"
+            class="devutilsplugin.views.URLCodecView"
+            id="DevUtilsPlugin.views.URLCodecView"
+            name="URLCodecView"
+            restorable="true">
+      </view>
    </extension>
 
 </plugin>
