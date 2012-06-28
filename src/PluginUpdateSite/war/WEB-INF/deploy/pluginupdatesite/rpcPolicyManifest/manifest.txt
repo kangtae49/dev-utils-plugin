@@ -1,0 +1,3 @@
+# Module pluginupdatesite
+# RPC service class, partial path of RPC policy file
+com.appspot.pluginupdate.client.GreetingService, 0C295C56E0D83088521F4C40F5C960CF.gwt.rpc
