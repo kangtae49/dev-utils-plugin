@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/DevUtilsFeature_1.0.3.201207061300.jar" id="DevUtilsFeature" version="1.0.3.201207061300">
+      <category name="DevUtils"/>
+   </feature>
+   <category-def name="DevUtils" label="DevUtils">
+      <description>
+         DevUtils
+      </description>
+   </category-def>
+</site>
