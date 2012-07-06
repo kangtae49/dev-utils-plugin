@@ -2,18 +2,18 @@
 <feature
       id="DevUtilsFeature"
       label="DevUtilsFeature"
-      version="1.0.2.qualifier">
+      version="1.0.3.qualifier">
 
-   <description url="http://pluginupdate.appspot.com/plugins/devutilsplugin">
+   <description url="http://dev-utils-plugin.googlecode.com/svn/trunk/update">
       devutilsplugins
    </description>
 
-   <copyright url="http://www.example.com/copyright">
+   <copyright url="http://dev-utils-plugin.googlecode.com">
       KangTae Kim
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="http://dev-utils-plugin.googlecode.com/svn/trunk/update/license">
+      license
    </license>
 
    <url>
