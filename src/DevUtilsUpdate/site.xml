@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/DevUtilsFeature_1.0.4.qualifier.jar" id="DevUtilsFeature" version="1.0.4.qualifier">
+   <feature url="features/DevUtilsFeature_1.0.4.201208240958.jar" id="DevUtilsFeature" version="1.0.4.201208240958">
       <category name="DevUtils"/>
    </feature>
    <category-def name="DevUtils" label="DevUtils">
