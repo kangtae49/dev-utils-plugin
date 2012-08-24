@@ -2,7 +2,7 @@
 <feature
       id="DevUtilsFeature"
       label="DevUtilsFeature"
-      version="1.0.3.qualifier">
+      version="1.0.4.qualifier">
 
    <description url="http://dev-utils-plugin.googlecode.com/svn/trunk/update">
       devutilsplugins
@@ -17,7 +17,7 @@
    </license>
 
    <url>
-      <update label="devutilsplugin" url="http://pluginupdate.appspot.com/plugins/devutilsplugin"/>
+      <update label="devutilsplugin" url="http://dev-utils-plugin.googlecode.com/svn/trunk/update"/>
    </url>
 
    <plugin
