@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="http://dev-utils-plugin.googlecode.com/svn/trunk/update/features/DevUtilsFeature_1.0.3.201207061300.jar" id="DevUtilsFeature" version="1.0.3.201207061300">
+   <feature url="features/DevUtilsFeature_1.0.4.qualifier.jar" id="DevUtilsFeature" version="1.0.4.qualifier">
       <category name="DevUtils"/>
    </feature>
    <category-def name="DevUtils" label="DevUtils">
