@@ -21,6 +21,13 @@
             name="URLCodecView"
             restorable="true">
       </view>
+      <view
+            category="DevUtilsPlugin.categorys.DevUtils"
+            class="devutilsplugin.views.RegexView"
+            id="DevUtilsPlugin.views.RegexView"
+            name="RegexView"
+            restorable="true">
+      </view>
    </extension>
 
 </plugin>
