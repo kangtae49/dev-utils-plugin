@@ -119,7 +119,7 @@ public class RegexView extends ViewPart {
 		layoutData.right = new FormAttachment(100, -pad_frame);
 		layoutData.bottom = new FormAttachment(50, -pad_ctrl);
 		txtSource.setLayoutData(layoutData);
-		txtSource.setText("");
+		txtSource.setText("123456");
 
 		layoutData = new FormData();
 		layoutData.top = new FormAttachment(txtSource, pad_frame);
@@ -138,7 +138,8 @@ public class RegexView extends ViewPart {
 		layoutData.left = new FormAttachment(lblPattern, pad_ctrl);
 		layoutData.right = new FormAttachment(btnMatch, -pad_ctrl);
 		txtPattern.setLayoutData(layoutData);
-
+		txtPattern.setText("([0-9]{3})([0-9]{3})");
+		
 		//
 		layoutData = new FormData();
 		layoutData.top = new FormAttachment(btnMatch, pad_frame);
@@ -157,6 +158,7 @@ public class RegexView extends ViewPart {
 		layoutData.left = new FormAttachment(lblReplace, pad_ctrl);
 		layoutData.right = new FormAttachment(btnReplace, -pad_ctrl);
 		txtReplace.setLayoutData(layoutData);
+		txtReplace.setText("$1-$2");
 		
 		layoutData = new FormData();
 		layoutData.top = new FormAttachment(btnReplace, pad_frame);
