@@ -122,8 +122,8 @@ public class Base64View extends ViewPart {
 		btnDecAndSaveFile.setLayoutData(layoutData);
 		btnDecAndSaveFile.setText("<=decode (save file)");
 		
-		Map charsets = Charset.availableCharsets();
-	    Iterator iterator = charsets.values().iterator();
+		Map<String, Charset> charsets = Charset.availableCharsets();
+	    Iterator<Charset> iterator = charsets.values().iterator();
 		while (iterator.hasNext()) {
 			Charset cs = (Charset) iterator.next();
 			cboCharset.add(cs.displayName());

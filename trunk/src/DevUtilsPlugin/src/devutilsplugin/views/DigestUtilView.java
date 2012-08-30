@@ -2,7 +2,6 @@ package devutilsplugin.views;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -28,7 +27,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 
@@ -110,8 +108,8 @@ public class DigestUtilView extends ViewPart {
 		btnENC.setLayoutData(layoutData);
 		btnENC.setText("=>encode");
 		
-		Map charsets = Charset.availableCharsets();
-	    Iterator iterator = charsets.values().iterator();
+		Map<String, Charset> charsets = Charset.availableCharsets();
+	    Iterator<Charset> iterator = charsets.values().iterator();
 		while (iterator.hasNext()) {
 			Charset cs = (Charset) iterator.next();
 			cboCharset.add(cs.displayName());
