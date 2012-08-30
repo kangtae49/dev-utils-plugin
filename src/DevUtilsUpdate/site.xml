@@ -3,10 +3,10 @@
    <feature url="features/DevUtilsFeature_1.0.4.201208241516.jar" id="DevUtilsFeature" version="1.0.4.201208241516">
       <category name="DevUtils"/>
    </feature>
-   <feature url="features/DevUtilsFeature_1.0.6.201208301241.jar" id="DevUtilsFeature" version="1.0.6.201208301241">
+   <feature url="features/DevUtilsFeature_1.0.5.201208281651.jar" id="DevUtilsFeature" version="1.0.5.201208281651">
       <category name="DevUtils"/>
    </feature>
-   <feature url="features/DevUtilsFeature_1.0.6.201208301245.jar" id="DevUtilsFeature" version="1.0.6.201208301245">
+   <feature url="features/DevUtilsFeature_1.0.6.201208301314.jar" id="DevUtilsFeature" version="1.0.6.201208301314">
       <category name="DevUtils"/>
    </feature>
    <category-def name="DevUtils" label="DevUtils">
