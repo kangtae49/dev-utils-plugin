@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.net.URLCodec;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -84,8 +83,8 @@ public class URLCodecView extends ViewPart {
 		btnDEC.setLayoutData(layoutData);
 		btnDEC.setText("<=decode");
 		
-		Map charsets = Charset.availableCharsets();
-	    Iterator iterator = charsets.values().iterator();
+		Map<String, Charset> charsets = Charset.availableCharsets();
+	    Iterator<Charset> iterator = charsets.values().iterator();
 		while (iterator.hasNext()) {
 			Charset cs = (Charset) iterator.next();
 			cboCharset.add(cs.displayName());
