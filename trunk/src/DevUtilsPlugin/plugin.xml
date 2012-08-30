@@ -28,6 +28,13 @@
             name="RegexView"
             restorable="true">
       </view>
+      <view
+            category="DevUtilsPlugin.categorys.DevUtils"
+            class="devutilsplugin.views.Base64View"
+            id="DevUtilsPlugin.views.Base64View"
+            name="Base64View"
+            restorable="true">
+      </view>
    </extension>
 
 </plugin>

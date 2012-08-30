@@ -3,14 +3,14 @@ package devutilsplugin.views;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
@@ -27,38 +27,35 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.ViewPart;
 
-public class DigestUtilView extends ViewPart {
-	public static final String ID = "DevUtilsPlugin.views.DigestUtilView";
+public class Base64View extends ViewPart {
+	public static final String ID = "DevUtilsPlugin.views.Base64View";
 	final int pad_frame = 10;
 	final int pad_ctrl = 5;
-	final int DIGEST_MD5 = 0;
-	final int DIGEST_SHA = 1;
-	final int DIGEST_SHA256 = 2;
-	final int DIGEST_SHA384 = 3;
-	final int DIGEST_SHA512 = 4;
 
-	public DigestUtilView() {
+	public Base64View() {
 	}
 
 	@Override
 	public void createPartControl(final Composite parent) {
-		
 		FormData layoutData = null;
 		FormLayout layout = new FormLayout();
 		parent.setLayout(layout);
 		
 		Label lblCharset = new Label(parent, SWT.NONE);
-		Label lblDigest = new Label(parent, SWT.NONE);
 		final Combo cboCharset = new Combo(parent, SWT.BORDER);
-		final Combo cboDigest = new Combo(parent, SWT.BORDER|SWT.READ_ONLY);
+		final Button chkChunked = new Button(parent, SWT.CHECK);
+		final Button chkUrlSafe = new Button(parent, SWT.CHECK);
+		
 		final Text txtDEC = new Text(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 		final Text txtENC = new Text(parent, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
 		Button btnENC = new Button(parent, SWT.PUSH);
+		Button btnDEC = new Button(parent, SWT.PUSH);
+		Button btnDecAndSaveFile = new Button(parent, SWT.PUSH | SWT.WRAP);
 
 		layoutData = new FormData();
 		layoutData.top = new FormAttachment(0, pad_frame);
@@ -73,21 +70,21 @@ public class DigestUtilView extends ViewPart {
 		layoutData.height = 100;
 		cboCharset.setLayoutData(layoutData);
 
-		layoutData = new FormData();
-		layoutData.top = new FormAttachment(cboCharset, pad_ctrl);
-		layoutData.left = new FormAttachment(0, pad_ctrl);
-		lblDigest.setLayoutData(layoutData);
-		lblDigest.setText("Digest : ");
 		
 		layoutData = new FormData();
 		layoutData.top = new FormAttachment(cboCharset, pad_frame);
-		layoutData.left = new FormAttachment(lblDigest, pad_frame);
-		layoutData.right = new FormAttachment(100, -pad_frame);
-		layoutData.height = 100;
-		cboDigest.setLayoutData(layoutData);
+		layoutData.left = new FormAttachment(0, pad_frame);
+		chkChunked.setLayoutData(layoutData);
+		chkChunked.setText("Chunked");
 		
 		layoutData = new FormData();
-		layoutData.top = new FormAttachment(cboDigest, pad_frame);
+		layoutData.top = new FormAttachment(cboCharset, pad_frame);
+		layoutData.left = new FormAttachment(chkChunked, pad_ctrl);
+		chkUrlSafe.setLayoutData(layoutData);
+		chkUrlSafe.setText("UrlSafe");
+		
+		layoutData = new FormData();
+		layoutData.top = new FormAttachment(chkUrlSafe, pad_ctrl);
 		layoutData.left = new FormAttachment(0, pad_frame);
 		layoutData.right = new FormAttachment(50, -pad_ctrl-40);
 		layoutData.bottom = new FormAttachment(100, -pad_frame);
@@ -96,7 +93,7 @@ public class DigestUtilView extends ViewPart {
 		txtDEC.setText("Input string or Drag&Drop File(s)!");
 
 		layoutData = new FormData();
-		layoutData.top = new FormAttachment(cboDigest, pad_frame);
+		layoutData.top = new FormAttachment(chkUrlSafe, pad_ctrl);
 		layoutData.left = new FormAttachment(50, pad_ctrl+40);
 		layoutData.right = new FormAttachment(100, -pad_frame);
 		layoutData.bottom = new FormAttachment(100, -pad_frame);
@@ -104,11 +101,26 @@ public class DigestUtilView extends ViewPart {
 		txtENC.setLayoutData(layoutData);
 
 		layoutData = new FormData();
-		layoutData.top = new FormAttachment(cboDigest, pad_frame);
+		layoutData.top = new FormAttachment(chkUrlSafe, pad_ctrl);
 		layoutData.left = new FormAttachment(txtDEC, pad_ctrl);
 		layoutData.right = new FormAttachment(txtENC, -pad_ctrl);
 		btnENC.setLayoutData(layoutData);
 		btnENC.setText("=>encode");
+
+		layoutData = new FormData();
+		layoutData.top = new FormAttachment(btnENC, pad_ctrl);
+		layoutData.left = new FormAttachment(txtDEC, pad_ctrl);
+		layoutData.right = new FormAttachment(txtENC, -pad_ctrl);
+		btnDEC.setLayoutData(layoutData);
+		btnDEC.setText("<=decode");
+		
+		layoutData = new FormData();
+		layoutData.top = new FormAttachment(btnDEC, pad_ctrl);
+		layoutData.left = new FormAttachment(txtDEC, pad_ctrl);
+		layoutData.right = new FormAttachment(txtENC, -pad_ctrl);
+		layoutData.height = 50;
+		btnDecAndSaveFile.setLayoutData(layoutData);
+		btnDecAndSaveFile.setText("<=decode (save file)");
 		
 		Map charsets = Charset.availableCharsets();
 	    Iterator iterator = charsets.values().iterator();
@@ -131,31 +143,28 @@ public class DigestUtilView extends ViewPart {
 		}
 		cboCharset.setText(Charset.defaultCharset().displayName());
 
-		cboDigest.add("md5", DIGEST_MD5);
-		cboDigest.add("sha", DIGEST_SHA);
-		cboDigest.add("sha256", DIGEST_SHA256);
-		cboDigest.add("sha384", DIGEST_SHA384);
-		cboDigest.add("sha512", DIGEST_SHA512);
-		cboDigest.setText("md5");
 		btnENC.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				
+				txtENC.setText("");
 				String decData = txtDEC.getText();
 		    	String charName = cboCharset.getText();
 		    	String encData = "";
-
+		    	boolean bChunked = chkChunked.getSelection();
+		    	boolean bUrlSafe = chkUrlSafe.getSelection();
 		    	byte [] byteData = null;
 		    	try {
 					byteData = decData.getBytes(charName);
 				} catch (UnsupportedEncodingException e2) {
 					e2.printStackTrace();
 				}
-
-				int digestType = cboDigest.getSelectionIndex();
-				encData = digest(byteData, digestType);
-
-		    	txtENC.append(encData + "\n");
+		    	try {
+					encData = new String(Base64.encodeBase64(byteData, bChunked, bUrlSafe), charName);
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+				}
+		    	
+		    	txtENC.setText(encData);
 			}
 			
 			@Override
@@ -163,8 +172,64 @@ public class DigestUtilView extends ViewPart {
 			}
 		});
 		
+		btnDEC.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				txtDEC.setText("");
+				String decData = "";
+		    	String charName = cboCharset.getText();
+		    	String encData = txtENC.getText();
+		    	try {
+					decData = new String(Base64.decodeBase64(encData), charName);
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+				}
+		    	
+		    	txtDEC.setText(decData);
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 		
-		
+		btnDecAndSaveFile.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// 
+				FileDialog dialog = new FileDialog(parent.getShell(), SWT.SAVE);
+				String path = dialog.open();
+				if(path == null){
+					return;
+				}
+				FileOutputStream os = null;
+				try {
+					String encData = txtENC.getText();
+					byte [] byteData = null;
+					os = new FileOutputStream(path);
+					byteData = Base64.decodeBase64(encData);
+					os.write(byteData);
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (IOException e2) {
+					e2.printStackTrace();
+				} finally{
+					if(os != null){
+						try {
+							os.close();
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				
+			}
+		});
 		
 		
 		
@@ -178,18 +243,25 @@ public class DigestUtilView extends ViewPart {
 			public void drop(DropTargetEvent event) {
 				if (FileTransfer.getInstance().isSupportedType(
 						event.currentDataType)) {
+					txtENC.setText("");
 			    	String encData = "";
-					int digestType = cboDigest.getSelectionIndex();
+			    	String charName = cboCharset.getText();
+			    	boolean bChunked = chkChunked.getSelection();
+			    	boolean bUrlSafe = chkUrlSafe.getSelection();
 
 			    	String[] files = (String[]) event.data;
 					StringBuffer sb = new StringBuffer();
-					for (int i = 0; i < files.length; i++) {
+					//for (int i = 0; i < files.length; i++) {
+					for (int i = 0; i < 1; i++) {
 						File fd = new File(files[i]);
 						FileInputStream is = null;
 						try {
 							is = new FileInputStream(fd);
-							encData = digest(is, digestType);
-							sb.append(encData + "\t" + fd.getAbsolutePath() + "\n");
+							byte byteData[] = new byte[(int) fd.length()]; 
+							is.read(byteData);
+							encData = new String(Base64.encodeBase64(byteData, bChunked, bUrlSafe), charName);
+							//sb.append("[" + fd.getAbsolutePath() + "]\n" + encData + "\n\n");
+							sb.append(encData);
 						} catch (Exception e) {
 							e.printStackTrace();
 						} finally{
@@ -203,7 +275,7 @@ public class DigestUtilView extends ViewPart {
 						}
 						
 					}
-					txtENC.append(sb.toString());
+					txtENC.setText(sb.toString());
 				}
 			}
 
@@ -243,66 +315,11 @@ public class DigestUtilView extends ViewPart {
 
 		dropTarget.setTransfer(transfers);
 		dropTarget.addDropListener(dtl);
-	
-
 	}
 
 	@Override
 	public void setFocus() {
 
 	}
-	
-	String digest(byte [] byteData, int digestType){
-		String encData = "";
-		try {
-			switch (digestType) {
-			case DIGEST_MD5:
-				encData = DigestUtils.md5Hex(byteData);
-				break;
-			case DIGEST_SHA:
-				encData = DigestUtils.shaHex(byteData);
-				break;
-			case DIGEST_SHA256:
-				encData = DigestUtils.sha256Hex(byteData);
-				break;
-			case DIGEST_SHA384:
-				encData = DigestUtils.sha384Hex(byteData);
-				break;
-			case DIGEST_SHA512:
-				encData = DigestUtils.sha512Hex(byteData);
-				break;
-			}
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		return encData;
-	}
 
-	String digest(InputStream is, int digestType){
-		String encData = "";
-		try {
-			switch (digestType) {
-			case DIGEST_MD5:
-				encData = DigestUtils.md5Hex(is);
-				break;
-			case DIGEST_SHA:
-				encData = DigestUtils.shaHex(is);
-				break;
-			case DIGEST_SHA256:
-				encData = DigestUtils.sha256Hex(is);
-				break;
-			case DIGEST_SHA384:
-				encData = DigestUtils.sha384Hex(is);
-				break;
-			case DIGEST_SHA512:
-				encData = DigestUtils.sha512Hex(is);
-				break;
-			}
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		return encData;
-	}
-	
-	
 }
