@@ -35,6 +35,13 @@
             name="Base64View"
             restorable="true">
       </view>
+      <view
+            category="DevUtilsPlugin.categorys.DevUtils"
+            class="devutilsplugin.views.SocketServerView"
+            id="DevUtilsPlugin.views.SocketServerView"
+            name="SocketServerView"
+            restorable="true">
+      </view>
    </extension>
 
 </plugin>
