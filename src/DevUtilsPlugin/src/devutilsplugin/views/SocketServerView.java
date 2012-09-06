@@ -256,7 +256,7 @@ public class SocketServerView extends ViewPart {
 		layoutData.bottom = new FormAttachment(100, 0);
 		txtSend.setLayoutData(layoutData);
 		txtSend.setBackground(new Color(parent.getDisplay(), 243, 246, 250));
-		txtSend.setText("HTTP/1.0 200 OK\r\n\r\nInput String or Drag & Drop File!!");
+		txtSend.setText("HTTP/1.0 200 OK\r\nContent-Length: 34\r\n\r\nInput String or Drag & Drop File!!");
 
 		Map<String, Charset> charsets = Charset.availableCharsets();
 	    Iterator<Charset> iterator = charsets.values().iterator();
