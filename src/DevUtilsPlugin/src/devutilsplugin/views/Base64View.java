@@ -20,6 +20,7 @@ import org.eclipse.swt.dnd.FileTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -90,7 +91,8 @@ public class Base64View extends ViewPart {
 		layoutData.bottom = new FormAttachment(100, -pad_frame);
 		txtDEC.setFont(new Font(parent.getDisplay(), "Fixedsys", 12, SWT.NONE));
 		txtDEC.setLayoutData(layoutData);
-		txtDEC.setText("Input string or Drag&Drop File(s)!");
+		txtDEC.setBackground(new Color(parent.getDisplay(), 243, 246, 250));
+		txtDEC.setText("Input string or Drag&Drop File!");
 
 		layoutData = new FormData();
 		layoutData.top = new FormAttachment(chkUrlSafe, pad_ctrl);
@@ -99,6 +101,7 @@ public class Base64View extends ViewPart {
 		layoutData.bottom = new FormAttachment(100, -pad_frame);
 		txtENC.setFont(new Font(parent.getDisplay(), "Fixedsys", 12, SWT.NONE));
 		txtENC.setLayoutData(layoutData);
+		txtENC.setBackground(new Color(parent.getDisplay(), 243, 246, 250));
 
 		layoutData = new FormData();
 		layoutData.top = new FormAttachment(chkUrlSafe, pad_ctrl);
