@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: DevUtilsPlugin
 Bundle-SymbolicName: DevUtilsPlugin;singleton:=true
-Bundle-Version: 1.0.7.qualifier
+Bundle-Version: 1.0.8.qualifier
 Bundle-Activator: devutilsplugin.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime
@@ -11,6 +11,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: lib/commons-codec-1.6.jar,
  lib/mina-core-2.0.4.jar,
  lib/slf4j-api-1.6.1.jar,
+ lib/mina-example-2.0.4.jar,
  .
 Export-Package: devutilsplugin,
  devutilsplugin.views,
@@ -29,6 +30,7 @@ Export-Package: devutilsplugin,
  org.apache.mina.core.service,
  org.apache.mina.core.session,
  org.apache.mina.core.write,
+ org.apache.mina.example.echoserver.ssl,
  org.apache.mina.filter.buffer,
  org.apache.mina.filter.codec,
  org.apache.mina.filter.codec.demux,

@@ -12,7 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.session.IdleStatus;
@@ -45,17 +44,18 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.part.ViewPart;
 
 import devutilsplugin.utils.ActionNewView;
-import devutilsplugin.utils.SocketServer;
+import devutilsplugin.utils.SocketClient;
 
-public class SocketServerView extends ViewPart {
-	public static final String ID = "DevUtilsPlugin.views.SocketServerView";
+
+public class SocketClientView extends ViewPart {
+	public static final String ID = "DevUtilsPlugin.views.SocketClientView";
 	final int pad_frame = 10;
 	final int pad_ctrl = 5;
-
+	
 	IoSession currSession = null;
-	final SocketServer serv = new SocketServer();
-	public SocketServerView() {
-		System.out.println("SocketServerView");
+	final SocketClient client = new SocketClient();
+
+	public SocketClientView() {
 	}
 	
 	void setMultiView(final IViewPart view){
@@ -72,17 +72,14 @@ public class SocketServerView extends ViewPart {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void createPartControl(final Composite parent) {
-		System.out.println("createPartControl");
-		
 		String secondaryId = getViewSite().getSecondaryId();
 		if (secondaryId == null) {
 			setMultiView(this);
 			return;
 		}
-		
 		FormData layoutData = null;
 		FormLayout layout = new FormLayout();
 		parent.setLayout(layout);
@@ -130,11 +127,10 @@ public class SocketServerView extends ViewPart {
 		final Button btnSaveRecvData = new Button(compositeRight, SWT.PUSH);
 		final Button btnClearRecvData = new Button(compositeRight, SWT.PUSH);
 		
-		Label lblBind = new Label(compositeLeft, SWT.NONE);
+		Label lblConnect = new Label(compositeLeft, SWT.NONE);
+		final Text txtHost = new Text(compositeLeft, SWT.BORDER);
 		final Text txtPort = new Text(compositeLeft, SWT.BORDER);
-		final Button btnBind = new Button(compositeLeft, SWT.PUSH);
-		final Button btnUnBind = new Button(compositeLeft, SWT.PUSH);
-		final Table tblPort = new Table(compositeLeft, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL);
+		final Button btnConnect = new Button(compositeLeft, SWT.PUSH);
 		Label lblSession = new Label(compositeLeft, SWT.NONE);
 		final Table tblSession = new Table(compositeLeft, SWT.BORDER | SWT.FULL_SELECTION | SWT.V_SCROLL);
 		final Text txtSessionID = new Text(compositeLeft, SWT.BORDER | SWT.READ_ONLY);
@@ -144,12 +140,25 @@ public class SocketServerView extends ViewPart {
 		layoutData = new FormData();
 		layoutData.top = new FormAttachment(0, 0);
 		layoutData.left = new FormAttachment(0, 0);
-		lblBind.setLayoutData(layoutData);
-		lblBind.setText("Listen Port");
+		chkSSL.setLayoutData(layoutData);
+		chkSSL.setText("Use SSL");
+
+		layoutData = new FormData();
+		layoutData.top = new FormAttachment(0, 0);
+		layoutData.left = new FormAttachment(chkSSL, pad_ctrl);
+		lblConnect.setLayoutData(layoutData);
+		lblConnect.setText("Connect");
 		
 		layoutData = new FormData();
 		layoutData.top = new FormAttachment(0, 0);
-		layoutData.left = new FormAttachment(lblBind, pad_ctrl);
+		layoutData.left = new FormAttachment(lblConnect, pad_ctrl);
+		layoutData.width = 100;
+		txtHost.setLayoutData(layoutData);
+		txtHost.setText("127.0.0.1");
+
+		layoutData = new FormData();
+		layoutData.top = new FormAttachment(0, 0);
+		layoutData.left = new FormAttachment(txtHost, pad_ctrl);
 		layoutData.width = 40;
 		txtPort.setLayoutData(layoutData);
 		txtPort.setText("1234");
@@ -157,48 +166,23 @@ public class SocketServerView extends ViewPart {
 		layoutData = new FormData();
 		layoutData.top = new FormAttachment(0, 0);
 		layoutData.left = new FormAttachment(txtPort, pad_ctrl);
-		btnBind.setLayoutData(layoutData);
-		btnBind.setText("Bind");
+		btnConnect.setLayoutData(layoutData);
+		btnConnect.setText("Connect");
 
 		layoutData = new FormData();
-		layoutData.top = new FormAttachment(0, 0);
-		layoutData.left = new FormAttachment(btnBind, pad_ctrl);
-		btnUnBind.setLayoutData(layoutData);
-		btnUnBind.setText("UnBind");
-
-		layoutData = new FormData();
-		layoutData.top = new FormAttachment(0, 0);
-		layoutData.left = new FormAttachment(btnUnBind, pad_ctrl);
-		chkSSL.setLayoutData(layoutData);
-		chkSSL.setText("Use SSL");
-		
-		
-		layoutData = new FormData();
-		layoutData.top = new FormAttachment(btnUnBind, pad_ctrl);
-		layoutData.left = new FormAttachment(0, 0);
-		layoutData.right = new FormAttachment(100, -pad_ctrl);
-		layoutData.height = 50;
-		tblPort.setLayoutData(layoutData);
-		tblPort.setLinesVisible(true);
-		tblPort.setHeaderVisible(true);
-		TableColumn colPort = new TableColumn(tblPort, SWT.LEFT);
-		colPort.setText("Port");
-		colPort.setWidth(100);
-		
-		layoutData = new FormData();
-		layoutData.top = new FormAttachment(tblPort, pad_ctrl);
+		layoutData.top = new FormAttachment(btnConnect, pad_ctrl);
 		layoutData.left = new FormAttachment(0, 0);
 		lblSession.setLayoutData(layoutData);
 		lblSession.setText("Session List");
 
 		layoutData = new FormData();
-		layoutData.top = new FormAttachment(tblPort, pad_ctrl);
+		layoutData.top = new FormAttachment(btnConnect, pad_ctrl);
 		layoutData.left = new FormAttachment(lblSession, pad_ctrl);
 		txtSessionID.setLayoutData(layoutData);
 		txtSessionID.setText("");
 
 		layoutData = new FormData();
-		layoutData.top = new FormAttachment(tblPort, pad_ctrl);
+		layoutData.top = new FormAttachment(btnConnect, pad_ctrl);
 		layoutData.left = new FormAttachment(txtSessionID, pad_ctrl);
 		btnCloseSession.setLayoutData(layoutData);
 		btnCloseSession.setText("Close Session");
@@ -289,7 +273,7 @@ public class SocketServerView extends ViewPart {
 		layoutData.bottom = new FormAttachment(100, 0);
 		txtSend.setLayoutData(layoutData);
 		txtSend.setBackground(new Color(parent.getDisplay(), 243, 246, 250));
-		txtSend.setText("HTTP/1.0 200 OK\r\nContent-Length: 34\r\n\r\nInput String or Drag & Drop File!!");
+		txtSend.setText("GET / HTTP/1.0\r\n\r\n");
 
 		Map<String, Charset> charsets = Charset.availableCharsets();
 	    Iterator<Charset> iterator = charsets.values().iterator();
@@ -319,7 +303,7 @@ public class SocketServerView extends ViewPart {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				boolean bSSL = chkSSL.getSelection();
-				serv.setSSL(bSSL);
+				client.setSSL(bSSL);
 			}
 			
 			@Override
@@ -438,61 +422,20 @@ public class SocketServerView extends ViewPart {
 			}
 		});
 		
-		btnBind.addSelectionListener(new SelectionListener() {
+		btnConnect.addSelectionListener(new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				tblPort.removeAll();
+				String host = txtHost.getText();
 				String strPort = txtPort.getText();
+				
 				try {
 					int port = Integer.parseInt(strPort);
-					List<Integer> portList = serv.addBind(port);
-					for(int i=0; i<portList.size(); i++){
-						TableItem item = new TableItem(tblPort, SWT.NONE);
-						item.setText(0, "" + portList.get(i));
-					}
+					client.connect(host, port);
+
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				
-			}
-		});
-		
-		btnUnBind.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				tblPort.removeAll();
-				String strPort = txtPort.getText();
-				try {
-					int port = Integer.parseInt(strPort);
-					List<Integer> portList = serv.unBind(port);
-					for(int i=0; i<portList.size(); i++){
-						TableItem item = new TableItem(tblPort, SWT.NONE);
-						item.setText(0, "" + portList.get(i));
-					}
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-				
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				
-			}
-		});
-		
-		tblPort.addSelectionListener(new SelectionListener() {
-			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int idx = tblPort.getSelectionIndex();
-				String strPort = tblPort.getItem(idx).getText(0);
-				txtPort.setText(strPort);
 			}
 			
 			@Override
@@ -600,7 +543,7 @@ public class SocketServerView extends ViewPart {
 
 		
 
-		serv.setHandler(new IoHandler() {
+		client.setHandler(new IoHandler() {
 			
 			@Override
 			public void sessionOpened(IoSession session) throws Exception {
@@ -782,8 +725,7 @@ public class SocketServerView extends ViewPart {
 	
 	@Override
 	public void dispose() {
-		System.out.println("dispose");
-		serv.dispose();
+		client.dispose();
 		super.dispose();
 	}
 	

@@ -27,9 +27,13 @@ import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.part.ViewPart;
+
+import devutilsplugin.utils.ActionNewView;
 
 public class DigestUtilView extends ViewPart {
 	public static final String ID = "DevUtilsPlugin.views.DigestUtilView";
@@ -43,9 +47,27 @@ public class DigestUtilView extends ViewPart {
 
 	public DigestUtilView() {
 	}
-
+	void setMultiView(final IViewPart view){
+		try {
+			Display.getDefault().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					getViewSite().getPage().hideView(view);
+					ActionNewView anv = new ActionNewView(getViewSite().getId());
+					anv.run();
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	@Override
 	public void createPartControl(final Composite parent) {
+		String secondaryId = getViewSite().getSecondaryId();
+		if (secondaryId == null) {
+			setMultiView(this);
+			return;
+		}
 		
 		FormData layoutData = null;
 		FormLayout layout = new FormLayout();

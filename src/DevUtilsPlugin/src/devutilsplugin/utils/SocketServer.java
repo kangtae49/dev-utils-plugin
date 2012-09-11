@@ -4,7 +4,10 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
 import org.apache.mina.core.service.IoHandler;
+import org.apache.mina.example.echoserver.ssl.BogusSslContextFactory;
+import org.apache.mina.filter.ssl.SslFilter;
 import org.apache.mina.transport.socket.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 
@@ -12,12 +15,17 @@ public class SocketServer {
 	SocketAcceptor acceptor = null;
 	IoHandler handler = null;
 	List<Integer> portList = new ArrayList<Integer>();
+	boolean bSSL = false;
 	
 	public SocketServer() {
 	}
 	
 	public void setHandler(IoHandler handler){
 		this.handler = handler;
+	}
+	
+	public void setSSL(boolean bSSL){
+		this.bSSL = bSSL;
 	}
 	
 	public List<Integer> addBind(int port) throws Exception {
@@ -27,10 +35,16 @@ public class SocketServer {
 			acceptor.setHandler(handler);
 		}
 		acceptor.setReuseAddress(true);
+		DefaultIoFilterChainBuilder chain = acceptor.getFilterChain();
+		if(bSSL){
+			SslFilter sslFilter = new SslFilter(BogusSslContextFactory.getInstance(true));
+			chain.addLast("sslFilter", sslFilter);
+		}
 
 		if(!portList.contains(port)){
 			portList.add(port);
 		}
+		
 		List<InetSocketAddress> addrs = new ArrayList<InetSocketAddress>();
 		for(int i=0; i<portList.size(); i++){
 			InetSocketAddress addr = new InetSocketAddress(portList.get(i));
@@ -68,7 +82,7 @@ public class SocketServer {
 	public static void main(String[] args) throws Exception {
 		SocketServer serv = new SocketServer();
 		serv.addBind(1234);
-		serv.addBind(5678);
+//		serv.addBind(5678);
 		
 
 	}
