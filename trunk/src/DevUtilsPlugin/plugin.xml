@@ -3,11 +3,20 @@
 <plugin>
    <extension
          point="org.eclipse.ui.views">
+      <view
+            allowMultiple="true"
+            category="DevUtilsPlugin.categorys.DevUtils"
+            class="devutilsplugin.views.Base64View"
+            id="DevUtilsPlugin.views.Base64View"
+            name="Base64View"
+            restorable="true">
+      </view>
       <category
             id="DevUtilsPlugin.categorys.DevUtils"
             name="DevUtils">
       </category>
       <view
+            allowMultiple="true"
             category="DevUtilsPlugin.categorys.DevUtils"
             class="devutilsplugin.views.DigestUtilView"
             id="DevUtilsPlugin.views.DigestUtilView"
@@ -15,13 +24,7 @@
             restorable="true">
       </view>
       <view
-            category="DevUtilsPlugin.categorys.DevUtils"
-            class="devutilsplugin.views.URLCodecView"
-            id="DevUtilsPlugin.views.URLCodecView"
-            name="URLCodecView"
-            restorable="true">
-      </view>
-      <view
+            allowMultiple="true"
             category="DevUtilsPlugin.categorys.DevUtils"
             class="devutilsplugin.views.RegexView"
             id="DevUtilsPlugin.views.RegexView"
@@ -29,17 +32,27 @@
             restorable="true">
       </view>
       <view
-            category="DevUtilsPlugin.categorys.DevUtils"
-            class="devutilsplugin.views.Base64View"
-            id="DevUtilsPlugin.views.Base64View"
-            name="Base64View"
-            restorable="true">
-      </view>
-      <view
+            allowMultiple="true"
             category="DevUtilsPlugin.categorys.DevUtils"
             class="devutilsplugin.views.SocketServerView"
             id="DevUtilsPlugin.views.SocketServerView"
             name="SocketServerView"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="true"
+            category="DevUtilsPlugin.categorys.DevUtils"
+            class="devutilsplugin.views.URLCodecView"
+            id="DevUtilsPlugin.views.URLCodecView"
+            name="URLCodecView"
+            restorable="true">
+      </view>
+      <view
+            allowMultiple="true"
+            category="DevUtilsPlugin.categorys.DevUtils"
+            class="devutilsplugin.views.SocketClientView"
+            id="DevUtilsPlugin.views.SocketClientView"
+            name="SocketClientView"
             restorable="true">
       </view>
    </extension>
