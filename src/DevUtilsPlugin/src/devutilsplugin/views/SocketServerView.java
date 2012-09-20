@@ -421,10 +421,11 @@ public class SocketServerView extends ViewPart {
 					return;
 				}
 				try{
-					IoBuffer buff = IoBuffer.allocate(1024);
 					String sendData = txtSend.getText();
 					String charset = cboCharsetOfSend.getText();
-					buff.put(sendData.getBytes(charset));
+					byte [] bytes = sendData.getBytes(charset);
+					IoBuffer buff = IoBuffer.allocate(bytes.length);
+					buff.put(bytes);
 					buff.flip();
 					currSession.write(buff);
 				}catch(Exception e1){
