@@ -2,7 +2,7 @@
 <feature
       id="DevUtilsFeature"
       label="DevUtilsFeature"
-      version="1.0.8.qualifier">
+      version="1.0.9.qualifier">
 
    <description url="http://dev-utils-plugin.googlecode.com/svn/trunk/update">
       devutilsplugins
